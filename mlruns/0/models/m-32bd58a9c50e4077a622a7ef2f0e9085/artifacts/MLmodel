@@ -1,0 +1,23 @@
+artifact_path: file:C:/Users/racha/ml-ops/mlruns/0/models/m-32bd58a9c50e4077a622a7ef2f0e9085/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.13.11
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.8.0
+    skops_trusted_types: null
+mlflow_version: 3.12.0
+model_id: m-32bd58a9c50e4077a622a7ef2f0e9085
+model_size_bytes: 67894
+model_uuid: m-32bd58a9c50e4077a622a7ef2f0e9085
+prompts: null
+run_id: e304b0c44b5e4f439016dc88caddbe4e
+utc_time_created: '2026-05-08 09:13:28.249888'

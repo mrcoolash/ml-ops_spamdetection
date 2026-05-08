@@ -3,28 +3,46 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import pickle
+import mlflow
+import mlflow.sklearn
 
-# Load cleaned data
-df = pd.read_csv("data/data.csv")
+# Start MLflow experiment
+with mlflow.start_run():
 
-X = df["text"]
-y = df["label"]
+    # Load dataset
+    df = pd.read_csv("data/data.csv")
 
-# Convert text → numbers
-vectorizer = TfidfVectorizer(stop_words="english")
-X_transformed = vectorizer.fit_transform(X)
+    X = df["text"]
+    y = df["label"]
 
-# Train model
-model = LogisticRegression()
-model.fit(X_transformed, y)
+    # Convert text into vectors
+    vectorizer = TfidfVectorizer(stop_words="english")
+    X_transformed = vectorizer.fit_transform(X)
 
-# Predict
-preds = model.predict(X_transformed)
+    # Hyperparameter
+    max_iter = 200
 
-# Accuracy
-acc = accuracy_score(y, preds)
-print("Accuracy:", acc)
+    # Train model
+    model = LogisticRegression(max_iter=max_iter)
+    model.fit(X_transformed, y)
 
-# Save model
-with open("models/model.pkl", "wb") as f:
-    pickle.dump((model, vectorizer), f)
+    # Predictions
+    preds = model.predict(X_transformed)
+
+    # Accuracy
+    acc = accuracy_score(y, preds)
+
+    print("Accuracy:", acc)
+
+    # Log parameter
+    mlflow.log_param("max_iter", max_iter)
+
+    # Log metric
+    mlflow.log_metric("accuracy", acc)
+
+    # Save model locally
+    with open("models/model.pkl", "wb") as f:
+        pickle.dump((model, vectorizer), f)
+
+    # Log model in MLflow
+    mlflow.sklearn.log_model(model, "spam_classifier")
